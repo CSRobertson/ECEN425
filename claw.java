@@ -1,12 +1,12 @@
-package main;
+package lego_assignment_2;
 
 import lejos.robotics.RegulatedMotor;
 
 public class claw {
-Boolean clawUp=false;
-Boolean clawOpen=true;
-RegulatedMotor clawCloser;
-RegulatedMotor clawLifter;
+private Boolean clawUp=false;
+private Boolean clawOpen=true;
+private RegulatedMotor clawCloser;
+private RegulatedMotor clawLifter;
 // TODO updates this angles
 final int angleToOpen = 360;
 
@@ -52,7 +52,7 @@ final int angleToOpen = 360;
 	 */
 	public void raiseClaw(){
 		if(!clawUp){
-			this.clawLifter.forward(); 
+			this.clawLifter.backward(); 
 			while(!this.clawLifter.isStalled()); //is stalled is a LeJos method
 			this.clawLifter.stop(); //stops the motor and puts it in break mode
 			clawUp = !clawUp;
@@ -64,7 +64,7 @@ final int angleToOpen = 360;
 	 */
 	public void lowerClaw(){
 		if(clawUp){
-			this.clawLifter.backward(); 
+			this.clawLifter.forward(); 
 			while(!this.clawLifter.isStalled()); //is stalled is a LeJos method
 			this.clawLifter.stop(); //stops the motor and puts it in break mode
 			clawUp = !clawUp;
