@@ -50,5 +50,71 @@ private LineMap map;
 		return this.map;
 	}
 	
+	public Puck[] getpucks(){
+		
+	}
+	
+	//returns the cloest puck with no consideration for the vlaue of the puck
+	//@param x The current X of the robot
+	//@param y The current Y of the robot
+	public int[] findCloestPuck(int x, int y){
+		int deltaX;
+		int deltaT;
+		int minDist=2000;
+		
+		for(Puck P: this.pucks){
+			deltaX = Math.abs(p.getX()-x);
+			deltaY = Math.abs(p.getY()-y);
+			int dist = (int) Math.sqrt(deltaX^2+deltaY^2);
+			minDist = Math.min(minDist, dist);
+		}
+		int[] answ = {p.getX(),p.getY()};
+		return answ;	
+	}
+	
+	
+	public int[] findCloestPuckWeighted(int x, int y){
+		int deltaX;
+		int deltaT;
+		int minDist=2000;
+		for(Puck P: this.pucks){
+			deltaX = Math.abs(p.getX()-x);
+			deltaY = Math.abs(p.getY()-y);
+			int dist = (int) Math.sqrt(deltaX^2+deltaY^2);
+			dist = dist*p.getValue();
+			minDist = Math.min(minDist, dist);
+		}
+		int[] answ = {p.getX(),p.getY()};
+		return answ;
+		
+		
+	}
+}	
 
+
+
+private class Puck{
+	 private int value;
+	 private int x;
+	 private int y;
+	 
+	 public Puck(int value, int x, int y){
+		 this.value=value;
+		 this.x=x;
+		 this.y=y;	 
+	 }
+	 
+	 public.getX(){
+		 return this.x;
+	 }
+	 
+	 public.getY(){
+		 return this.y;
+	 }
+	 public getValue(){
+		 return this.value;
+	 }
 }
+
+
+
