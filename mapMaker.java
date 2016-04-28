@@ -57,7 +57,7 @@ private LineMap map;
 	//returns the cloest puck with no consideration for the vlaue of the puck
 	//@param x The current X of the robot
 	//@param y The current Y of the robot
-	public int[] findCloestPuck(int x, int y){
+	public int[] findClosestPuck(int x, int y){
 		int deltaX;
 		int deltaT;
 		int minDist=2000;
@@ -73,7 +73,9 @@ private LineMap map;
 	}
 	
 	
-	public int[] findCloestPuckWeighted(int x, int y){
+	
+	
+	public int[] findClosestPuckWeighted(int x, int y){
 		int deltaX;
 		int deltaT;
 		int minDist=2000;
@@ -81,13 +83,11 @@ private LineMap map;
 			deltaX = Math.abs(p.getX()-x);
 			deltaY = Math.abs(p.getY()-y);
 			int dist = (int) Math.sqrt(deltaX^2+deltaY^2);
-			dist = dist*p.getValue();
+			dist = dist/p.getValue();
 			minDist = Math.min(minDist, dist);
 		}
 		int[] answ = {p.getX(),p.getY()};
-		return answ;
-		
-		
+		return answ;	
 	}
 }	
 
@@ -101,7 +101,8 @@ private class Puck{
 	 public Puck(int value, int x, int y){
 		 this.value=value;
 		 this.x=x;
-		 this.y=y;	 
+		 this.y=(int)y/5; 	// this scales it so the loest value of puck(5) 
+		 					//has a devider of 1 in the findClosestPuckWeighted  method
 	 }
 	 
 	 public.getX(){
