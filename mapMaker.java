@@ -29,6 +29,10 @@ private LineMap map;
 			lines.add(new Line(130,190,130,240));
 			lines.add(new Line(130,240,190,240));
 			lines.add(new Line(190,240,190,290));
+			lines.add(new Line(0,0,190,0));
+			lines.add(new Line(190,0,190,290));
+			lines.add(new Line(0,290,190,290));
+			lines.add(new Line(0,0,0,290));
 		
 			line = lines.toArray(new Line[lines.size()]);
 		
@@ -45,18 +49,23 @@ private LineMap map;
 		
 		
 	}
-	
+	/*
+	 * Return the  map generated in the constuctor 
+	 */
 	public LineMap getMap(){
 		return this.map;
 	}
-	
+	/*
+	 * will generate the pucks for map
+	 */
 	public Puck[] getpucks(){
 		
 	}
 	
-	//returns the cloest puck with no consideration for the vlaue of the puck
-	//@param x The current X of the robot
-	//@param y The current Y of the robot
+	/*returns the cloest puck with no consideration for the vlaue of the puck
+	*@param x The current X of the robot
+	*@param y The current Y of the robot
+	*/
 	public int[] findClosestPuck(int x, int y){
 		int deltaX;
 		int deltaT;
@@ -74,7 +83,10 @@ private LineMap map;
 	
 	
 	
-	
+	/*returns the cloest puck with a consideration of the value of the puck 
+	*@param x The current X of the robot
+	*@param y The current Y of the robot
+	*/
 	public int[] findClosestPuckWeighted(int x, int y){
 		int deltaX;
 		int deltaT;
@@ -97,6 +109,12 @@ private class Puck{
 	 private int value;
 	 private int x;
 	 private int y;
+	 /*
+	  * Constuctor for the puck class 
+	  * @param value  the point value for the Puck
+	  * @param x the X cordinate of the puck
+	  * @param y the Y cordinate of the puck
+	  */
 	 
 	 public Puck(int value, int x, int y){
 		 this.value=value;
@@ -104,14 +122,23 @@ private class Puck{
 		 this.y=(int)y/5; 	// this scales it so the loest value of puck(5) 
 		 					//has a devider of 1 in the findClosestPuckWeighted  method
 	 }
-	 
+	 /*
+	  * Returns the x or the puck
+	  */
 	 public.getX(){
 		 return this.x;
 	 }
 	 
+	 /*
+	  * Returns the y of the puck
+	  */
 	 public.getY(){
 		 return this.y;
 	 }
+	 
+	 /*
+	  * returns the value of the curent puck
+	  */
 	 public getValue(){
 		 return this.value;
 	 }
