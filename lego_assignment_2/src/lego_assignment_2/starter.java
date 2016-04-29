@@ -45,20 +45,17 @@ public class starter {
 		RegulatedMotor left = new EV3LargeRegulatedMotor(MotorPort.D);
 		RegulatedMotor clawLifter = new EV3MediumRegulatedMotor(MotorPort.C);
 		RegulatedMotor claw = new NXTRegulatedMotor(MotorPort.B);
-		System.out.println("Created Motors");
-		//claw c = new claw(claw, clawLifter);
-		//c.raiseClaw();
+		System.out.println("Created Claw");
+		claw c = new claw(claw, clawLifter);
+		c.raiseClaw();
 		
 		
 		
 		
 		System.out.println("Starting chassis");
 		Wheel wheelL = WheeledChassis.modelWheel(left,41.5).offset(75.00);
-		System.out.println("Creating wheelL");
 		Wheel wheelR = WheeledChassis.modelWheel(right,41.5).offset(-75.00).invert(true);
-		System.out.println("Creating wheelR");
 		Chassis chassis = new WheeledChassis(new Wheel[]{wheelL,wheelR}, WheeledChassis.TYPE_DIFFERENTIAL);	
-		System.out.println("Creating chassis");
 		MovePilot pilot = new MovePilot(chassis);
 		System.out.println("Creating Pilot");
 		
@@ -77,6 +74,7 @@ public class starter {
 		}
 		catch(Exception e){
 			System.out.println("Shit Failed Yo");
+			System.out.println(e);
 		}
 		
 		if(finder == null)System.out.println("Finder is null");
@@ -103,18 +101,71 @@ public class starter {
 		}
 		
 		System.out.println("Setting up Path Finder");
-		//DijkstraPathFinder pf = new DijkstraPathFinder(map);
-		//pf.lengthenLines(8f);
-		//System.out.println("Setting up Navigator");
-		//Navigator Navman = new Navigator(pilot,mlc); 
+		DijkstraPathFinder pf = new DijkstraPathFinder(map);
+		pf.lengthenLines(8f);
+		System.out.println("Setting up Navigator");
+		Navigator Navman = new Navigator(pilot,mcl); 
 		
 		
-		System.out.println("Trying to see where i am");
-		Pose Guess = mcl.getPose();
+//		System.out.println("Trying to see where i am");
+//		Pose Guess = mcl.getPose();
+//		
+//		System.out.println("i'm at X: " + Guess.getX() +" y: "+Guess.getY());
 		
-		System.out.println("i'm at X: " + Guess.getX() +" y: "+Guess.getY());
+		Key upKey = BrickFinder.getDefault().getKey("Up");
+		Key downKey =BrickFinder.getDefault().getKey("Down");
+		Key leftKey =BrickFinder.getDefault().getKey("Left");
+		Key rightKey =BrickFinder.getDefault().getKey("Right");
+		Key centerKey =BrickFinder.getDefault().getKey("Center");
+		Key escapeKey =BrickFinder.getDefault().getKey("Escape");
+		
+		//Use the Keys to set the maze entry point 
+		int Entry=0;
+		
+		while(true){
+			if(upKey.isDown()){
+				Entry=1;
+				break;
+			}
+			else if (downKey.isDown()){
+				Entry=2;
+				break;
+			}
+			else if(leftKey.isDown()){
+				Entry=3;
+				break;
+			}
+			else if(rightKey.isDown()){
+				Entry=4;
+				break;
+			}
+		}
+		System.out.println("Entry Point = " +Entry);
+		System.out.println("Press center Key to start");
+		while(!centerKey.isDown());
+		escapeMaze(Entry); //TODO write this method 
+		
+		//Main control loop
+		while(!escapeKey.isDown()){
+			
+			
+		}
 		
 
+		
+		
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		Delay.msDelay(4000);
 //		System.out.println("Init Brick");
@@ -160,5 +211,10 @@ public class starter {
 		left.close();
 		right.close();
 
+	}
+
+	private static void escapeMaze(int entry) {
+		// TODO Auto-generated method stub
+		
 	}
 }
