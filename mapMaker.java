@@ -7,8 +7,8 @@ import lejos.robotics.geometry.Rectangle;
 import lejos.robotics.mapping.LineMap;
 
 public class mapMaker {
-private LineMap map;
-	
+private LineMap mapped;
+private puck[] pucks;
 // Creates the map for the test mase in AM219	
 	public mapMaker() {
 		ArrayList<Line> lines = new ArrayList<Line>();
@@ -29,6 +29,7 @@ private LineMap map;
 			lines.add(new Line(130,190,130,240));
 			lines.add(new Line(130,240,190,240));
 			lines.add(new Line(190,240,190,290));
+			//lines around the outside
 			lines.add(new Line(0,0,190,0));
 			lines.add(new Line(190,0,190,290));
 			lines.add(new Line(0,290,190,290));
@@ -39,27 +40,23 @@ private LineMap map;
 			rect = new Rectangle(0,0,190,290);
 		
 		LineMap map = new LineMap(line,rect);
-		
-		
-		try {
-			map.createSVGFile("map2.svg");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		mapped=map;
 		
 		
 	}
 	/*
-	 * Return the  map generated in the constuctor 
+	 * Return the  map generated in the constructor 
 	 */
 	public LineMap getMap(){
-		return this.map;
+		return this.mapped;
 	}
 	/*
 	 * will generate the pucks for map
 	 */
-	public Puck[] getpucks(){
+	public puck[] getpucks(){
 		
+		puck[] pucks = {new puck(1,2,5), new puck(3,4,5)};
+		return pucks;
 	}
 	
 	/*returns the cloest puck with no consideration for the vlaue of the puck
@@ -68,16 +65,20 @@ private LineMap map;
 	*/
 	public int[] findClosestPuck(int x, int y){
 		int deltaX;
-		int deltaT;
+		int deltaY;
 		int minDist=2000;
+		puck puckF=null;
 		
-		for(Puck P: this.pucks){
+		for(puck p: this.pucks){
 			deltaX = Math.abs(p.getX()-x);
 			deltaY = Math.abs(p.getY()-y);
 			int dist = (int) Math.sqrt(deltaX^2+deltaY^2);
-			minDist = Math.min(minDist, dist);
+			if(dist<minDist){
+				puckF=p;
+				minDist=dist;
+			}
 		}
-		int[] answ = {p.getX(),p.getY()};
+		int[] answ = {puckF.getX(),puckF.getY()};
 		return answ;	
 	}
 	
@@ -89,60 +90,27 @@ private LineMap map;
 	*/
 	public int[] findClosestPuckWeighted(int x, int y){
 		int deltaX;
-		int deltaT;
+		int deltaY;
 		int minDist=2000;
-		for(Puck P: this.pucks){
+		puck puckF=null;
+		
+		for(puck p: this.pucks){
 			deltaX = Math.abs(p.getX()-x);
 			deltaY = Math.abs(p.getY()-y);
 			int dist = (int) Math.sqrt(deltaX^2+deltaY^2);
 			dist = dist/p.getValue();
-			minDist = Math.min(minDist, dist);
+			if(dist<minDist){
+				puckF=p;
+				minDist=dist;
+			}
 		}
-		int[] answ = {p.getX(),p.getY()};
-		return answ;	
-	}
+		int[] answ = {puckF.getX(),puckF.getY()};
+		return answ;
 }	
-
-
-
-private class Puck{
-	 private int value;
-	 private int x;
-	 private int y;
-	 /*
-	  * Constuctor for the puck class 
-	  * @param value  the point value for the Puck
-	  * @param x the X cordinate of the puck
-	  * @param y the Y cordinate of the puck
-	  */
-	 
-	 public Puck(int value, int x, int y){
-		 this.value=value;
-		 this.x=x;
-		 this.y=(int)y/5; 	// this scales it so the loest value of puck(5) 
-		 					//has a devider of 1 in the findClosestPuckWeighted  method
-	 }
-	 /*
-	  * Returns the x or the puck
-	  */
-	 public.getX(){
-		 return this.x;
-	 }
-	 
-	 /*
-	  * Returns the y of the puck
-	  */
-	 public.getY(){
-		 return this.y;
-	 }
-	 
-	 /*
-	  * returns the value of the curent puck
-	  */
-	 public getValue(){
-		 return this.value;
-	 }
 }
+
+
+
 
 
 
