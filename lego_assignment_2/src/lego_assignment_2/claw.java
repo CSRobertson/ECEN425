@@ -1,12 +1,28 @@
 package lego_assignment_2;
 
+import lejos.hardware.ev3.LocalEV3;
+import lejos.hardware.sensor.EV3ColorSensor;
+import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.robotics.RegulatedMotor;
+import lejos.robotics.SampleProvider;
+import lejos.utility.Delay;
 
 public class claw {
 private Boolean clawUp=false;
 private Boolean clawOpen=true;
+
+
+
 private RegulatedMotor clawCloser;
 private RegulatedMotor clawLifter;
+
+
+
+
+private EV3ColorSensor sensorColor = new EV3ColorSensor(LocalEV3.get().getPort("S3"));
+private SampleProvider colorC = sensorColor.getRedMode();
+private float[] samplesColor = new float[colorC.sampleSize()];
+
 // TODO updates this angles
 final int angleToOpen = 360;
 
@@ -26,6 +42,8 @@ final int angleToOpen = 360;
 		// This sets the speed of the motors to the max possible based on the battery level
 		this.clawLifter.setSpeed((int) this.clawLifter.getMaxSpeed());
 		this.clawCloser.setSpeed((int) this.clawCloser.getMaxSpeed());
+		
+
 	}
 	
 	/*
@@ -52,9 +70,12 @@ final int angleToOpen = 360;
 	 */
 	public void raiseClaw(){
 		if(!clawUp){
-			this.clawLifter.backward(); 
-			while(!this.clawLifter.isStalled()); //is stalled is a LeJos method
-			this.clawLifter.stop(); //stops the motor and puts it in break mode
+			clawLifter.backward();
+			Delay.msDelay(4000);
+			clawLifter.stop();
+//			this.clawLifter.backward(); 
+//			while(!this.clawLifter.isStalled()); //is stalled is a LeJos method
+//			this.clawLifter.stop(); //stops the motor and puts it in break mode
 			clawUp = !clawUp;
 		}
 	}
@@ -75,6 +96,14 @@ final int angleToOpen = 360;
 	/*
 	 * Aims the claw and then opens the claw to fire the puck
 	 */
+	
+	
+	public Boolean puckPresent(){
+		this.colorC.fetchSample(this.samplesColor, 0);
+		return (samplesColor[0] > 0.03f );
+	}
+	
+	
 	public void fireClaw(){
 		// TODO update this method with the right shit
 	}

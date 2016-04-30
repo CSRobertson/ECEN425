@@ -40,9 +40,9 @@ public class RangeFinder implements RangeScanner {
 		distanceL.fetchSample(smaplesR, 0);
 		distanceF.fetchSample(smaplesF, 0);
 		distanceR.fetchSample(smaplesR, 0);
-		readings.setRange(0, -90,smaplesL[0]);
+		readings.setRange(0, 90,smaplesL[0]);
 		readings.setRange(1, 0, smaplesF[0]);
-		readings.setRange(2, 90, smaplesR[0]);	
+		readings.setRange(2, 270, smaplesR[0]);	
 	}
 
 	@Override

@@ -3,6 +3,8 @@
  */
 package lego_assignment_2;
 
+import java.util.ArrayList;
+
 import lejos.hardware.BrickFinder;
 import lejos.hardware.Key;
 import lejos.hardware.ev3.LocalEV3;
@@ -20,22 +22,26 @@ import lejos.robotics.chassis.Wheel;
 import lejos.robotics.chassis.WheeledChassis;
 import lejos.robotics.mapping.LineMap;
 import lejos.robotics.mapping.RangeMap;
+import lejos.robotics.navigation.DestinationUnreachableException;
 import lejos.robotics.navigation.MovePilot;
 import lejos.robotics.navigation.MoveProvider;
 import lejos.robotics.navigation.Navigator;
 import lejos.robotics.navigation.Pose;
+import lejos.robotics.navigation.Waypoint;
 import lejos.robotics.pathfinding.DijkstraPathFinder;
+import lejos.robotics.pathfinding.Path;
 import lejos.robotics.pathfinding.PathFinder;
 import lejos.utility.Delay;
 import lejos.robotics.localization.MCLParticleSet;
 import lejos.robotics.localization.MCLPoseProvider;
+
 
 /**
  * @author Nick
  *
  */
 public class starter {
-
+	static Pose CurPose;
 	/**
 	 * @param args
 	 */
@@ -47,7 +53,6 @@ public class starter {
 		RegulatedMotor claw = new NXTRegulatedMotor(MotorPort.B);
 		System.out.println("Created Claw");
 		claw c = new claw(claw, clawLifter);
-		c.raiseClaw();
 		
 		
 		
@@ -65,8 +70,9 @@ public class starter {
 		pilot.setLinearAcceleration(1000);
 		
 		System.out.println("Setting up Map");
-		mapMaker bob = new mapMaker();
-		LineMap map = bob.getMap();
+		mapMaker mapHolder = new mapMaker();
+		LineMap map = mapHolder.getMap();
+		map.flip();
 		RangeFinder finder=null;
 		try{
 		System.out.println("Setting up RangeFinder");
@@ -78,7 +84,6 @@ public class starter {
 		}
 		
 		if(finder == null)System.out.println("Finder is null");
-		if(map == null)System.out.println("Map is null");
 		MCLPoseProvider mcl=null;
 		try{
 		System.out.println("Setting up pose provider");
@@ -110,15 +115,18 @@ public class starter {
 //		System.out.println("Trying to see where i am");
 //		Pose Guess = mcl.getPose();
 //		
-//		System.out.println("i'm at X: " + Guess.getX() +" y: "+Guess.getY());
+
+		
+		System.out.println("Setting up Keys");
+		
 		
 		Key upKey = BrickFinder.getDefault().getKey("Up");
 		Key downKey =BrickFinder.getDefault().getKey("Down");
 		Key leftKey =BrickFinder.getDefault().getKey("Left");
 		Key rightKey =BrickFinder.getDefault().getKey("Right");
-		Key centerKey =BrickFinder.getDefault().getKey("Center");
+		Key centerKey =BrickFinder.getDefault().getKey("Enter");
 		Key escapeKey =BrickFinder.getDefault().getKey("Escape");
-		
+		System.out.println("Keys setup");
 		//Use the Keys to set the maze entry point 
 		int Entry=0;
 		
@@ -143,10 +151,27 @@ public class starter {
 		System.out.println("Entry Point = " +Entry);
 		System.out.println("Press center Key to start");
 		while(!centerKey.isDown());
-		escapeMaze(Entry); //TODO write this method 
+		c.raiseClaw();
+		//escapeMaze(Entry); //TODO write this method 
 		
+		ArrayList<Waypoint> path=null;
 		//Main control loop
 		while(!escapeKey.isDown()){
+			CurPose=mcl.getPose();
+			int[] targetPuck = mapHolder.findClosestPuck(CurPose.getX(), CurPose.getY());
+			Waypoint wp = new Waypoint((double) targetPuck[0],(double) targetPuck[1]);
+			try {
+				path = pf.findRoute(CurPose, wp);
+			} catch (DestinationUnreachableException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			Navman.followPath((Path) path);
+			while(!Navman.pathCompleted() && !escapeKey.isDown()){		
+			}
+			
+			
 			
 			
 		}
@@ -167,7 +192,7 @@ public class starter {
 		
 		
 		
-		Delay.msDelay(4000);
+		//Delay.msDelay(4000);
 //		System.out.println("Init Brick");
 //		Key escape = BrickFinder.getDefault().getKey("Escape");
 		

@@ -50,6 +50,8 @@ private puck[] pucks;
 	public LineMap getMap(){
 		return this.mapped;
 	}
+	
+	
 	/*
 	 * will generate the pucks for map
 	 */
@@ -63,16 +65,16 @@ private puck[] pucks;
 	*@param x The current X of the robot
 	*@param y The current Y of the robot
 	*/
-	public int[] findClosestPuck(int x, int y){
-		int deltaX;
-		int deltaY;
-		int minDist=2000;
+	public int[] findClosestPuck(float x, float y){
+		float deltaX;
+		float deltaY;
+		float minDist=2000;
 		puck puckF=null;
 		
 		for(puck p: this.pucks){
 			deltaX = Math.abs(p.getX()-x);
 			deltaY = Math.abs(p.getY()-y);
-			int dist = (int) Math.sqrt(deltaX^2+deltaY^2);
+			float dist = (float) Math.sqrt((deltaX*deltaX)+(deltaY*deltaY));
 			if(dist<minDist){
 				puckF=p;
 				minDist=dist;
@@ -87,17 +89,18 @@ private puck[] pucks;
 	/*returns the cloest puck with a consideration of the value of the puck 
 	*@param x The current X of the robot
 	*@param y The current Y of the robot
+	*@returns the corinnaties of the puck
 	*/
 	public int[] findClosestPuckWeighted(int x, int y){
-		int deltaX;
-		int deltaY;
-		int minDist=2000;
+		float deltaX;
+		float deltaY;
+		float minDist=2000;
 		puck puckF=null;
 		
 		for(puck p: this.pucks){
 			deltaX = Math.abs(p.getX()-x);
 			deltaY = Math.abs(p.getY()-y);
-			int dist = (int) Math.sqrt(deltaX^2+deltaY^2);
+			float dist = (float) Math.sqrt((deltaX*deltaX)+(deltaY*deltaY));
 			dist = dist/p.getValue();
 			if(dist<minDist){
 				puckF=p;
@@ -105,9 +108,11 @@ private puck[] pucks;
 			}
 		}
 		int[] answ = {puckF.getX(),puckF.getY()};
-		return answ;
+		return answ;	
+	}
+	
 }	
-}
+
 
 
 
