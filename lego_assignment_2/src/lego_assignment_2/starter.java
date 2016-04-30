@@ -171,6 +171,18 @@ public class starter {
 			while(!Navman.pathCompleted() && !escapeKey.isDown()){		
 			}
 			
+			pilot.rotate(180);
+			c.lowerClaw();
+			c.openClaw();
+			pilot.setLinearSpeed(100);
+			while(!c.puckPresent() && !escapeKey.isDown()){
+				pilot.backward();
+			}
+			c.closeClaw();
+			c.raiseClaw();
+			if
+			
+			
 			
 			
 			
